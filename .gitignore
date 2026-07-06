@@ -5,9 +5,10 @@
 mangascope_trace.json
 
 # Project Reports & Writeups (Excluded from GitHub)
-progress_report.md
-kaggle_project_description.md
-demo.md
+# Ignore all markdown files by default for privacy
+*.md
+# Do not ignore README.md
+!README.md
 memory.json
 
 # Python cache / builds
