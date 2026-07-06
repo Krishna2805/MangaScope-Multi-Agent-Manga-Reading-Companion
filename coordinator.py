@@ -38,7 +38,7 @@ from errors import normalize_error
 import dotenv
 
 # Load environment variables (such as GEMINI_API_KEY)
-dotenv.load_dotenv()
+dotenv.load_dotenv(override=True)
 
 
 

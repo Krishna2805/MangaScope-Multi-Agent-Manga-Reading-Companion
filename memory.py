@@ -3,14 +3,6 @@ MangaScope — Memory layer.
 
 Persists lightweight user context to memory.json for personalization only.
 Memory is NEVER used as a cache — live AniList calls always happen regardless.
-
-What gets stored:
-  - username
-  - last_run date
-  - series_history: series name, chapters_read at that time, recommendation given
-
-What does NOT get stored:
-  - Full API responses, chapter mappings, or anything that must stay fresh.
 """
 
 from __future__ import annotations
@@ -21,9 +13,14 @@ import re
 from datetime import datetime
 from typing import Optional
 
-from schemas import UserMemory, SeriesMemoryEntry
+from schemas import UserMemory
 
 MEMORY_FILE = os.path.join(os.path.dirname(__file__), "memory.json")
+
+
+def _clean_title(title: str) -> str:
+    """Normalize a series name for comparison by removing non-alphanumeric characters."""
+    return re.sub(r'[^a-z0-9]', '', title.lower())
 
 
 def load_memory(username: str) -> Optional[UserMemory]:
@@ -46,7 +43,6 @@ def load_memory(username: str) -> Optional[UserMemory]:
             if entry.get("username", "").lower() == username.lower():
                 return UserMemory(**entry)
     elif isinstance(data, dict):
-        # Single user record (legacy or first run)
         if data.get("username", "").lower() == username.lower():
             return UserMemory(**data)
 
@@ -94,14 +90,9 @@ def save_memory(
     # Update last_run
     user_entry["last_run"] = datetime.now().strftime("%Y-%m-%d")
 
-def _clean_title(title: str) -> str:
-    """Normalize a series name for comparison by removing non-alphanumeric characters."""
-    return re.sub(r'[^a-z0-9]', '', title.lower())
-
-
     # Find or create series entry within user
     series_found = False
-    for s in user_entry.get("series_history", []):
+    for s in user_entry.setdefault("series_history", []):
         if _clean_title(s.get("series", "")) == _clean_title(series):
             # Update the stored name to match the latest casing/branding (like [Oshi no Ko])
             s["series"] = series
@@ -112,15 +103,18 @@ def _clean_title(title: str) -> str:
             break
 
     if not series_found:
-        user_entry.setdefault("series_history", []).append({
+        user_entry["series_history"].append({
             "series": series,
             "chapters_read_at_last_run": chapters_read,
             "recommendation_given": recommendation_given,
         })
 
     # Write back
-    with open(MEMORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(all_users, f, indent=2, ensure_ascii=False)
+    try:
+        with open(MEMORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(all_users, f, indent=2, ensure_ascii=False)
+    except OSError:
+        pass
 
 
 def get_previous_chapters(username: str, series: str) -> Optional[int]:

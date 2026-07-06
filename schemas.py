@@ -22,7 +22,7 @@ class ProgressOutput(BaseModel):
     status: str = ""  # CURRENT, COMPLETED, PAUSED, DROPPED, PLANNING, NOT_IN_LIST
     chapters_read: int = 0
     volumes_read: int = 0
-    user_score: Optional[int] = None
+    user_score: Optional[float] = None
     anilist_id: Optional[int] = None
     manga_status: Optional[str] = None  # AniList manga status e.g. FINISHED, RELEASING
     total_chapters: Optional[int] = None  # Total chapters if finished/tracked

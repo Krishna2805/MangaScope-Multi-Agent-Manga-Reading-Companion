@@ -31,28 +31,10 @@ from schemas import AdaptationOutput
 from errors import normalize_error
 
 # Load environment variables on startup for standalone execution support
-dotenv.load_dotenv()
+dotenv.load_dotenv(override=True)
 
 # Path to the dynamic lifecycle-managed JSON file
 MAPPINGS_FILE = os.path.join(os.path.dirname(__file__), "verified_mappings.json")
-
-# Baseline hardcoded mappings in case JSON file is missing/uncaught issues
-BASELINE_MAPPINGS = {
-    "one piece": {
-        "anime_status": "ONGOING",
-        "anime_episodes_aired": 1122,
-        "manga_chapter_equivalent": 1122,
-        "safe_resume_chapter": 1123,
-        "note": "Anime is ongoing. Verified mapping.",
-    },
-    "attack on titan": {
-        "anime_status": "FINISHED",
-        "anime_episodes_aired": 89,
-        "manga_chapter_equivalent": 139,
-        "safe_resume_chapter": 140,
-        "note": "Anime fully covered the manga. Manga is complete.",
-    },
-}
 
 
 def load_verified_mappings() -> dict:
@@ -185,7 +167,7 @@ Be precise and factual. Ensure the JSON block is properly formatted. Return ONLY
 
     res = mcp_server.run_tool(
         "gemini_search_tool",
-        {"prompt": prompt, "model": "gemini-2.5-flash", "temperature": 0.1}
+        {"prompt": prompt, "temperature": 0.1}
     )
 
     try:

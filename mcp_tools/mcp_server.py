@@ -6,8 +6,8 @@ import dotenv
 from google import genai
 from google.genai import types
 
-# Load environment variables on startup
-dotenv.load_dotenv()
+# Load environment variables on startup, forcing override so changes in .env are applied
+dotenv.load_dotenv(override=True)
 
 _client = None
 
@@ -46,7 +46,7 @@ def run_tool(tool_name: str, input_payload: dict) -> dict:
         
     elif tool_name == "gemini_search_tool":
         prompt = input_payload.get("prompt")
-        model = input_payload.get("model", "gemini-2.5-flash")
+        model = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
         temperature = input_payload.get("temperature", 0.2)
         
         client = _get_gemini_client()

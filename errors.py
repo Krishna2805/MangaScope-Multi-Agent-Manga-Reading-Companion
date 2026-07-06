@@ -15,15 +15,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("MangaScope")
 
 
-class NormalizedError(Exception):
-    """A standardized error carrying user-friendly information."""
-    def __init__(self, message: str, raw_error: Exception, is_transient: bool = False):
-        super().__init__(message)
-        self.message = message
-        self.raw_error = raw_error
-        self.is_transient = is_transient
-
-
 def normalize_error(error: Exception, agent_name: str) -> dict:
     """
     Normalize an exception into a standard dictionary format for agent fallbacks.

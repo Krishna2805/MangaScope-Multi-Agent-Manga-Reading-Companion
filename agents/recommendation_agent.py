@@ -30,7 +30,7 @@ from schemas import RecommendationOutput
 from errors import normalize_error
 
 # Load environment variables on startup for standalone execution support
-dotenv.load_dotenv()
+dotenv.load_dotenv(override=True)
 
 
 def _extract_json_block(text: str) -> dict:
@@ -95,7 +95,7 @@ Return ONLY the JSON block inside ```json and ``` code fence.
 
     res = mcp_server.run_tool(
         "gemini_search_tool",
-        {"prompt": prompt, "model": "gemini-2.5-flash", "temperature": 0.2}
+        {"prompt": prompt, "temperature": 0.2}
     )
 
     try:
@@ -191,6 +191,9 @@ def run(
         elif manga_status == "FINISHED" and total_chapters is not None and total_chapters > 0 and chapters_read >= total_chapters:
             is_caught_up = True
             caught_up_reason = "The manga is finished and you have read all chapters."
+        elif total_chapters is not None and total_chapters > 0 and safe_resume_chapter is not None and safe_resume_chapter > total_chapters:
+            is_caught_up = True
+            caught_up_reason = f"The anime adaptation (resuming at Chapter {safe_resume_chapter}) has already covered the entire manga (which has {total_chapters} chapters)."
 
         if is_caught_up:
             return RecommendationOutput(

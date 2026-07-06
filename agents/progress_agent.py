@@ -16,7 +16,7 @@ from errors import normalize_error
 from mcp_tools import mcp_server
 
 # Load environment variables on startup for standalone execution support
-dotenv.load_dotenv()
+dotenv.load_dotenv(override=True)
 
 AGENT_SKILLS = {
     "ProgressAgent": ["anilist_query", "reading_status_extraction"]
@@ -25,8 +25,6 @@ AGENT_SKILLS = {
 def get_agent_skills() -> list[str]:
     """Expose agent skills for rubric compliance."""
     return AGENT_SKILLS["ProgressAgent"]
-
-ANILIST_URL = "https://graphql.anilist.co"
 
 # ── GraphQL Queries ──────────────────────────────────────────────────────────
 

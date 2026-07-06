@@ -298,7 +298,13 @@ if st.session_state.report:
     if report.progress.agent_status == "success":
         score_html = ""
         if report.progress.user_score:
-            score_html = f'<div class="stat-pill">Score: <strong>{esc(report.progress.user_score)}/10</strong></div>'
+            score_val = report.progress.user_score
+            if isinstance(score_val, float):
+                formatted_score = int(score_val) if score_val.is_integer() else score_val
+            else:
+                formatted_score = score_val
+            suffix = "/100" if score_val > 10 else "/10"
+            score_html = f'<div class="stat-pill">Score: <strong>{esc(formatted_score)}{suffix}</strong></div>'
         
         st.markdown(f"""
 <div class="result-card">

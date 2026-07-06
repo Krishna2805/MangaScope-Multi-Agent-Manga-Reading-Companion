@@ -94,7 +94,7 @@ Return ONLY the JSON block inside ```json and ``` code fence.
 
     res = mcp_server.run_tool(
         "gemini_search_tool",
-        {"prompt": prompt, "model": "gemini-2.5-flash", "temperature": 0.2}
+        {"prompt": prompt, "temperature": 0.2}
     )
 
     # Binary check: Ensure Google Search actually found web grounding sources/queries
