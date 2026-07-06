@@ -1,0 +1,26 @@
+# Local Environment Variables
+.env
+
+# Diagnostic / Execution Logs
+mangascope_trace.json
+
+# Project Reports & Writeups (Excluded from GitHub)
+progress_report.md
+kaggle_project_description.md
+demo.md
+
+# Python cache / builds
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Streamlit config / cache
+.streamlit/

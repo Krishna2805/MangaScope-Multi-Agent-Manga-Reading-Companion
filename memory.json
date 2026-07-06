@@ -1,0 +1,45 @@
+[
+  {
+    "username": "lelouch2805",
+    "last_run": "2026-07-06",
+    "series_history": [
+      {
+        "series": "One Piece",
+        "chapters_read_at_last_run": 0,
+        "recommendation_given": "Egghead Arc"
+      },
+      {
+        "series": "Solo Leveling",
+        "chapters_read_at_last_run": 201,
+        "recommendation_given": "Monarchs War Arc (Light Novel)"
+      },
+      {
+        "series": "Jujutsu Kaisen",
+        "chapters_read_at_last_run": 0,
+        "recommendation_given": "Culling Game Arc"
+      }
+    ]
+  },
+  {
+    "username": "this_user_definitely_does_not_exist_xyz123",
+    "last_run": "2026-07-06",
+    "series_history": [
+      {
+        "series": "One Piece",
+        "chapters_read_at_last_run": 0,
+        "recommendation_given": "Egghead Arc"
+      }
+    ]
+  },
+  {
+    "username": "krish",
+    "last_run": "2026-07-06",
+    "series_history": [
+      {
+        "series": "Jujutsu Kaisen",
+        "chapters_read_at_last_run": 0,
+        "recommendation_given": "Culling Game Arc"
+      }
+    ]
+  }
+]

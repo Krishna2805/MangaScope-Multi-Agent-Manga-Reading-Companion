@@ -1,0 +1,72 @@
+{
+  "one piece": {
+    "anime_status": "ONGOING",
+    "anime_episodes_aired": 1122,
+    "manga_chapter_equivalent": 1122,
+    "safe_resume_chapter": 1123,
+    "note": "Anime is ongoing. Verified mapping."
+  },
+  "attack on titan": {
+    "anime_status": "FINISHED",
+    "anime_episodes_aired": 89,
+    "manga_chapter_equivalent": 139,
+    "safe_resume_chapter": 140,
+    "note": "Anime fully covered the manga. Manga is complete."
+  },
+  "shingeki no kyojin": {
+    "anime_status": "FINISHED",
+    "anime_episodes_aired": 89,
+    "manga_chapter_equivalent": 139,
+    "safe_resume_chapter": 140,
+    "note": "Anime fully covered the manga. Manga is complete."
+  },
+  "jujutsu kaisen": {
+    "anime_status": "ONGOING",
+    "anime_episodes_aired": 48,
+    "manga_chapter_equivalent": 212,
+    "safe_resume_chapter": 213,
+    "note": "Anime is ongoing. Verified mapping."
+  },
+  "demon slayer": {
+    "anime_status": "FINISHED",
+    "anime_episodes_aired": 55,
+    "manga_chapter_equivalent": 205,
+    "safe_resume_chapter": 206,
+    "note": "Anime fully covered the manga. Manga is complete."
+  },
+  "kimetsu no yaiba": {
+    "anime_status": "FINISHED",
+    "anime_episodes_aired": 55,
+    "manga_chapter_equivalent": 205,
+    "safe_resume_chapter": 206,
+    "note": "Anime fully covered the manga. Manga is complete."
+  },
+  "solo leveling": {
+    "anime_status": "ONGOING",
+    "anime_episodes_aired": 24,
+    "manga_chapter_equivalent": 58,
+    "safe_resume_chapter": 59,
+    "note": "Anime is ongoing. Verified mapping."
+  },
+  "chainsaw man": {
+    "anime_status": "ONGOING",
+    "anime_episodes_aired": 12,
+    "manga_chapter_equivalent": 38,
+    "safe_resume_chapter": 39,
+    "note": "Anime Season 1 covers Part 1 through Chapter 38. Verified mapping."
+  },
+  "my hero academia": {
+    "anime_status": "ONGOING",
+    "anime_episodes_aired": 163,
+    "manga_chapter_equivalent": 402,
+    "safe_resume_chapter": 403,
+    "note": "Anime is ongoing. Verified mapping."
+  },
+  "boku no hero academia": {
+    "anime_status": "ONGOING",
+    "anime_episodes_aired": 163,
+    "manga_chapter_equivalent": 402,
+    "safe_resume_chapter": 403,
+    "note": "Anime is ongoing. Verified mapping."
+  }
+}
