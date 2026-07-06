@@ -57,6 +57,8 @@ def _extract_json_block(text: str) -> dict:
     raise ValueError("Response does not contain a valid JSON block.")
 
 
+from datetime import datetime
+
 def _gemini_recommendation(
     series_name: str, target_chapter: int
 ) -> RecommendationOutput:
@@ -64,8 +66,10 @@ def _gemini_recommendation(
     Query Gemini with web search grounding to find story arcs/chapters
     starting from target_chapter.
     """
+    current_date = datetime.now().strftime("%B %d, %Y")
     prompt = f"""
 You are a Manga Recommendation Agent. Your job is to search the web to find the manga story arcs and chapter ranges for '{series_name}' starting from chapter {target_chapter}.
+Current Reference Date: {current_date}. Ensure you suggest the latest story arcs and chapters released up to this date.
 
 Specifically, search for:
 1. What is the name of the major story arc containing or starting at chapter {target_chapter}?

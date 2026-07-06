@@ -16,6 +16,7 @@ import os
 import re
 from typing import Optional
 import dotenv
+from datetime import datetime
 from mcp_tools import mcp_server
 
 AGENT_SKILLS = {
@@ -55,15 +56,9 @@ BASELINE_MAPPINGS = {
 
 
 def load_verified_mappings() -> dict:
-    """Load verified mappings from verified_mappings.json with baseline fallback and strict schema validation."""
+    """Load verified mappings from verified_mappings.json with strict schema validation."""
     if not os.path.exists(MAPPINGS_FILE):
-        # Save baseline to file to initialize lifecycle management
-        try:
-            with open(MAPPINGS_FILE, "w", encoding="utf-8") as f:
-                json.dump(BASELINE_MAPPINGS, f, indent=2, ensure_ascii=False)
-        except Exception:
-            pass
-        return BASELINE_MAPPINGS
+        return {}
 
     try:
         with open(MAPPINGS_FILE, "r", encoding="utf-8") as f:
@@ -77,18 +72,23 @@ def load_verified_mappings() -> dict:
                         # Ensure essential keys exist and have correct types
                         anime_status = v.get("anime_status")
                         safe_resume = v.get("safe_resume_chapter")
-                        if anime_status in ["ONGOING", "FINISHED", "NO_ADAPTATION"] and isinstance(safe_resume, int):
-                            validated[k.strip().lower()] = {
+                        if anime_status in ["ONGOING", "FINISHED", "NO_ADAPTATION"]:
+                            try:
+                                safe_resume_val = int(safe_resume) if safe_resume is not None else None
+                            except (ValueError, TypeError):
+                                safe_resume_val = None
+                            
+                            validated[_normalize_series_name(k)] = {
                                 "anime_status": anime_status,
                                 "anime_episodes_aired": v.get("anime_episodes_aired"),
                                 "manga_chapter_equivalent": v.get("manga_chapter_equivalent"),
-                                "safe_resume_chapter": safe_resume,
+                                "safe_resume_chapter": safe_resume_val,
                                 "confidence": v.get("confidence", "high"),
                                 "note": str(v.get("note", "Verified Mapping")),
                             }
-            return validated if validated else BASELINE_MAPPINGS
+            return validated
     except Exception:
-        return BASELINE_MAPPINGS
+        return {}
 
 
 def register_verified_mapping(series_name: str, mapping_data: dict) -> bool:
@@ -97,7 +97,7 @@ def register_verified_mapping(series_name: str, mapping_data: dict) -> bool:
     Returns True if successfully written, False otherwise.
     """
     mappings = load_verified_mappings()
-    normalized = series_name.strip().lower()
+    normalized = _normalize_series_name(series_name)
     mappings[normalized] = {
         "anime_status": mapping_data.get("anime_status", "UNKNOWN"),
         "anime_episodes_aired": mapping_data.get("anime_episodes_aired"),
@@ -116,8 +116,8 @@ def register_verified_mapping(series_name: str, mapping_data: dict) -> bool:
 
 
 def _normalize_series_name(name: str) -> str:
-    """Normalize a series name for lookup."""
-    return name.strip().lower()
+    """Normalize a series name for lookup by removing non-alphanumeric characters."""
+    return re.sub(r'[^a-z0-9]', '', name.lower())
 
 
 def _extract_json_block(text: str) -> dict:
@@ -152,8 +152,10 @@ def _gemini_tracker_fallback(series_name: str) -> AdaptationOutput:
     Call Gemini with web search grounding to estimate anime-to-manga mapping.
     Confidence is always 'low' for Gemini estimates.
     """
+    current_date = datetime.now().strftime("%B %d, %Y")
     prompt = f"""
 You are a Manga-to-Anime Adaptation Tracker. Your job is to search the web to map where the anime adaptation of the manga series '{series_name}' currently stands.
+Current Reference Date: {current_date}. Ensure you search for the absolute latest episodes and chapter mappings released up to this date.
 
 Search for:
 1. Is there an anime adaptation of '{series_name}'?

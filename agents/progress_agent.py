@@ -121,7 +121,7 @@ def run(username: str, series_name: str) -> ProgressOutput:
             agent_status="fallback",
             series=series_name,
             status="NOT_FOUND",
-            message=f"Could not find manga '{series_name}' on AniList.",
+            message=f"The manga '{series_name}' does not exist (anime original) or is not present in AniList.",
         )
 
     # Step 2 — Query user's list for this manga

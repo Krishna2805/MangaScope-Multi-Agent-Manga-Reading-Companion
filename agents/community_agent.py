@@ -62,12 +62,16 @@ def _extract_json_block(text: str) -> dict:
     raise ValueError("Response does not contain a valid JSON block.")
 
 
+from datetime import datetime
+
 def _gemini_community_discussion(series_name: str) -> CommunityOutput:
     """
     Query Gemini with search grounding to fetch and validate community discussion.
     """
+    current_date = datetime.now().strftime("%B %d, %Y")
     prompt = f"""
 You are a Community Context Agent for manga. Your task is to search the web for recent online community discussions (e.g., on Reddit, forums, or social media) about the manga series '{series_name}'.
+Current Reference Date: {current_date}. Search for recent fan discussions up to this date.
 
 Look for:
 - What are fans currently debating, theorizing, or discussing about recent chapters or story developments?

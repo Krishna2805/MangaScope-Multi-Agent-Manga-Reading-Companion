@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from datetime import datetime
 from typing import Optional
 
@@ -93,10 +94,17 @@ def save_memory(
     # Update last_run
     user_entry["last_run"] = datetime.now().strftime("%Y-%m-%d")
 
+def _clean_title(title: str) -> str:
+    """Normalize a series name for comparison by removing non-alphanumeric characters."""
+    return re.sub(r'[^a-z0-9]', '', title.lower())
+
+
     # Find or create series entry within user
     series_found = False
     for s in user_entry.get("series_history", []):
-        if s.get("series", "").lower() == series.lower():
+        if _clean_title(s.get("series", "")) == _clean_title(series):
+            # Update the stored name to match the latest casing/branding (like [Oshi no Ko])
+            s["series"] = series
             s["chapters_read_at_last_run"] = chapters_read
             if recommendation_given is not None:
                 s["recommendation_given"] = recommendation_given
@@ -124,6 +132,6 @@ def get_previous_chapters(username: str, series: str) -> Optional[int]:
     if mem is None:
         return None
     for s in mem.series_history:
-        if s.series.lower() == series.lower():
+        if _clean_title(s.series) == _clean_title(series):
             return s.chapters_read_at_last_run
     return None

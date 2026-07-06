@@ -198,7 +198,7 @@ col1, col2 = st.columns(2)
 with col1:
     username = st.text_input(
         "AniList Username",
-        placeholder="e.g. lelouch2805",
+        placeholder="e.g. abcde",
         help="Your AniList username (alphanumeric + underscores)",
     )
 with col2:
@@ -215,6 +215,7 @@ if "memory_note" not in st.session_state:
     st.session_state.memory_note = ""
 
 run_button = st.button("🚀 Run Agent", use_container_width=True, type="primary")
+st.caption("📅 **Current Reference Date:** July 06, 2026 *(Search queries, ongoing episode counts, and chapter mappings are evaluated up to this date)*")
 
 st.divider()
 
@@ -295,38 +296,50 @@ if st.session_state.report:
 
     # ── Progress Card ────────────────────────────────────────────
     if report.progress.agent_status == "success":
+        score_html = ""
+        if report.progress.user_score:
+            score_html = f'<div class="stat-pill">Score: <strong>{esc(report.progress.user_score)}/10</strong></div>'
+        
         st.markdown(f"""
 <div class="result-card">
-    <h3>📖 Your Progress</h3>
-    <div class="stat-row">
-        <div class="stat-pill">Status: <strong>{esc(report.progress.status)}</strong></div>
-        <div class="stat-pill">Chapters Read: <strong>{esc(report.progress.chapters_read)}</strong></div>
-        <div class="stat-pill">Volumes Read: <strong>{esc(report.progress.volumes_read)}</strong></div>
-        {"<div class='stat-pill'>Score: <strong>" + str(report.progress.user_score) + "/10</strong></div>" if report.progress.user_score else ""}
-    </div>
+<h3>📖 Your Progress</h3>
+<div class="stat-row">
+<div class="stat-pill">Status: <strong>{esc(report.progress.status)}</strong></div>
+<div class="stat-pill">Chapters Read: <strong>{esc(report.progress.chapters_read)}</strong></div>
+<div class="stat-pill">Volumes Read: <strong>{esc(report.progress.volumes_read)}</strong></div>
+{score_html}
+</div>
 </div>
 """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
 <div class="fallback-badge">
-    <span class="badge-icon">⚠️</span>
-    <strong>Progress Agent:</strong> {esc(report.progress.message or "Could not retrieve reading progress from AniList.")}
+<span class="badge-icon">⚠️</span>
+<strong>Progress Agent:</strong> {esc(report.progress.message or "Could not retrieve reading progress from AniList.")}
 </div>
 """, unsafe_allow_html=True)
 
     # ── Adaptation Card ──────────────────────────────────────────
     if report.adaptation.agent_status == "success":
         conf_class = f"confidence-{report.adaptation.confidence}"
+        episodes_html = ""
+        if report.adaptation.anime_episodes_aired is not None:
+            episodes_html = f'<div class="stat-pill">Episodes Aired: <strong>{report.adaptation.anime_episodes_aired}</strong></div>'
+        
+        resume_html = ""
+        if report.adaptation.safe_resume_chapter is not None:
+            resume_html = f'<div class="stat-pill">Safe Resume: <strong>Chapter {report.adaptation.safe_resume_chapter}</strong></div>'
+
         st.markdown(f"""
 <div class="result-card">
-    <h3>📺 Anime Adaptation</h3>
-    <div class="stat-row">
-        <div class="stat-pill">Anime: <strong>{esc(report.adaptation.anime_status)}</strong></div>
-        {"<div class='stat-pill'>Episodes Aired: <strong>" + str(report.adaptation.anime_episodes_aired) + "</strong></div>" if report.adaptation.anime_episodes_aired else ""}
-        {"<div class='stat-pill'>Safe Resume: <strong>Chapter " + str(report.adaptation.safe_resume_chapter) + "</strong></div>" if report.adaptation.safe_resume_chapter else ""}
-        <div class="stat-pill">Confidence: <span class="{conf_class}">{esc(report.adaptation.confidence.upper())}</span></div>
-    </div>
-    <div class="card-note">{esc(report.adaptation.note)}</div>
+<h3>📺 Anime Adaptation</h3>
+<div class="stat-row">
+<div class="stat-pill">Anime: <strong>{esc(report.adaptation.anime_status)}</strong></div>
+{episodes_html}
+{resume_html}
+<div class="stat-pill">Confidence: <span class="{conf_class}">{esc(report.adaptation.confidence.upper())}</span></div>
+</div>
+<div class="card-note">{esc(report.adaptation.note)}</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -356,8 +369,8 @@ if st.session_state.report:
     else:
         st.markdown(f"""
 <div class="fallback-badge">
-    <span class="badge-icon">⚠️</span>
-    <strong>Adaptation Tracker:</strong> {esc(report.adaptation.message or "Could not determine anime-to-manga chapter mapping.")}
+<span class="badge-icon">⚠️</span>
+<strong>Adaptation Tracker:</strong> {esc(report.adaptation.message or "Could not determine anime-to-manga chapter mapping.")}
 </div>
 """, unsafe_allow_html=True)
 
@@ -389,16 +402,16 @@ if st.session_state.report:
 
         st.markdown(f"""
 <div class="result-card">
-    <h3>🗺️ What to Read Next <span class="{priority_class}">{priority_label}</span></h3>
-    {arc_info}
-    <div class="card-note">{esc(report.recommendation.description)}</div>
+<h3>🗺️ What to Read Next <span class="{priority_class}">{priority_label}</span></h3>
+{arc_info}
+<div class="card-note">{esc(report.recommendation.description)}</div>
 </div>
 """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
 <div class="fallback-badge">
-    <span class="badge-icon">⚠️</span>
-    <strong>Recommendation Agent:</strong> {esc(report.recommendation.message or "Could not generate reading recommendation.")}
+<span class="badge-icon">⚠️</span>
+<strong>Recommendation Agent:</strong> {esc(report.recommendation.message or "Could not generate reading recommendation.")}
 </div>
 """, unsafe_allow_html=True)
 
@@ -406,11 +419,11 @@ if st.session_state.report:
     if report.community_context.agent_status == "success":
         st.markdown(f"""
 <div class="result-card">
-    <h3>💬 Community Buzz</h3>
-    <div style="font-size: 1rem; color: #ddd; margin-top: 0.5rem; line-height: 1.6;">
-        {esc(report.community_context.top_discussion_summary)}
-    </div>
-    <div style="margin-top: 0.5rem; font-size: 0.78rem; color: #888;">Source: {esc(report.community_context.source)}</div>
+<h3>💬 Community Buzz</h3>
+<div style="font-size: 1rem; color: #ddd; margin-top: 0.5rem; line-height: 1.6;">
+{esc(report.community_context.top_discussion_summary)}
+</div>
+<div style="margin-top: 0.5rem; font-size: 0.78rem; color: #888;">Source: {esc(report.community_context.source)}</div>
 </div>
 """, unsafe_allow_html=True)
     elif report.community_context.agent_status == "skipped":
@@ -455,6 +468,6 @@ if st.session_state.report:
     # ── Footer ──────────────────────────────────────────────────
     st.markdown(f"""
 <div class="footer">
-    Generated at {esc(report.generated_at)} · MangaScope v1.0
+Generated at {esc(report.generated_at)} · Reference Date: July 06, 2026 · MangaScope v1.0
 </div>
 """, unsafe_allow_html=True)
