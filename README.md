@@ -2,7 +2,7 @@
 
 MangaScope is an intelligent multi-agent manga reading companion. It solves a ubiquitous challenge for anime and manga enthusiasts: **transitioning from watching an anime adaptation to reading the original manga source material without spoilers, narrative regressions, or tedious manual searches.**
 
-Typically, anime seasons end mid-way through a manga's publication cycle. Viewers wanting to continue the story are forced to browse community wikis, fan forums, or search engines to find where to start. MangaScope addresses this by coordinating a team of specialized AI agents built on **Gemini models** with **Google Search Grounding**, paired with an upfront deterministic verification layer, structured schemas, memory personalization, and orchestrator-level contract enforcement.
+Typically, anime seasons end mid-way through a manga's publication cycle. Viewers wanting to continue the story are forced to browse community wikis, fan forums, or search engines to find where to start. MangaScope addresses this by coordinating a team of specialized AI agents built on **Groq Cloud API (`openai/gpt-oss-120b`)** with **Live DuckDuckGo Web Search Grounding**, paired with an upfront deterministic verification layer, structured schemas, memory personalization, and orchestrator-level contract enforcement.
 
 ---
 
@@ -72,18 +72,18 @@ pip install -r requirements.txt
 
 ### Step 4: Configure Environment Variables
  
-MangaScope requires a Gemini API Key and model configuration. Copy the template configuration file:
+MangaScope requires a Groq API Key (or Gemini key for backward compatibility). Copy the template configuration file:
  
 ```bash
 # Copy example file
 cp .env.example .env
 ```
  
-Open the newly created `.env` file and insert your API key and chosen model:
+Open the newly created `.env` file and insert your Groq API key:
  
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=your_chosen_gemini_model_here
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=openai/gpt-oss-120b
 ```
 
 ### Step 5: Start the Streamlit Application
