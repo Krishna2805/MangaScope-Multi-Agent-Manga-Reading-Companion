@@ -10,7 +10,6 @@ mangascope_trace.json
 # Do not ignore README.md
 !README.md
 memory.json
-agents/verified_mappings.json
 
 # Python cache / builds
 __pycache__/
