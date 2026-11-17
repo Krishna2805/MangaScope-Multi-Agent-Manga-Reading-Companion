@@ -6,7 +6,10 @@ import logging
 import requests
 import dotenv
 from groq import Groq
-from duckduckgo_search import DDGS
+try:
+    from duckduckgo_search import DDGS
+except ImportError:
+    DDGS = None
 
 # Load environment variables on startup, forcing override so changes in .env are applied
 dotenv.load_dotenv(override=True)
@@ -45,6 +48,8 @@ def _extract_search_keywords(prompt: str) -> str:
 
 def _live_web_search(query: str, max_results: int = 4) -> list[dict]:
     """Execute live web search for real-time anime/manga grounding."""
+    if DDGS is None:
+        return []
     try:
         ddgs = DDGS(timeout=8)
         results = list(ddgs.text(query, max_results=max_results))
