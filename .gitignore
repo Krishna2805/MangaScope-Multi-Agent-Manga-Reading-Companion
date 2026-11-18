@@ -9,13 +9,9 @@ mangascope_trace.json
 *.md
 # Do not ignore README.md
 !README.md
+# Local developer notes & scratch files
 *.local.md
 .*.local.md
-.dev_notes.local.md
-DEFECTS_AND_BACKLOG.md
-*DEFECT*
-*BACKLOG*
-*ISSUE*
 memory.json
 
 # Python cache / builds
